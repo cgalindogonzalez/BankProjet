@@ -1,6 +1,6 @@
 package bankproject.entities;
 
-public class Account {
+public class Account extends AbstractEntity {
 
 	private AccountNumber accountNumber;
 	private int balance;

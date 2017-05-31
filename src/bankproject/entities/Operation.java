@@ -2,7 +2,7 @@ package bankproject.entities;
 
 import java.sql.Date;
 
-public class Operation {
+public class Operation extends AbstractEntity {
 	
 	private Date date;
 	private Customer customer;

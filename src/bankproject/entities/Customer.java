@@ -1,6 +1,6 @@
 package bankproject.entities;
 
-public class Customer {
+public class Customer extends AbstractEntity {
 	
 	
 	private String surname;

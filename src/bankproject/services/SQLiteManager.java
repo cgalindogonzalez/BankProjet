@@ -1,41 +1,62 @@
 package bankproject.services;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLiteManager {
+public class SQLiteManager extends DatabaseManager {
 
+	private static SQLiteManager INSTANCE = new SQLiteManager();
+	private String url;
+	
 	/**
-     * Connect to a sample database
-     */
-	public static void connect(){
-		Connection conn = null;
-		try{
-			//create a conexion to the database
-			conn = DriverManager.getConnection("jdbc:sqlite:"+getSQLiteDBPath());
-			
-			System.out.println("Connection to SQLite has been established");
-			
-			
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			
-		}finally {
-			try{
-				if (conn != null) {
-					conn.close();
-				}
-			}catch (SQLException ex){
-				System.out.println(ex.getMessage());
-			}
-		}
+	 * Private constructor
+	 */
+	private SQLiteManager() {
+		url = "jdbc:sqlite"+ getSQLiteDBPath();
 	}
-
-	private static String getSQLiteDBPath() {
-		return System.getProperty("user.dir") + System.getProperty("file.separator") + "data.sqlite"+ System.getProperty("file.separator") + "data.db";
+	
+	/**
+	 * This class is a singleton. Return the unique instance
+	 * 
+	 * @return
+	 */
+	public static SQLiteManager getInstance () {
+		return INSTANCE;
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+	public Connection getConnection() throws SQLException{
+		return DriverManager.getConnection(url);
 		
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static String getSQLiteDBPath() {
+		
+		String fs = System.getProperty("file.separator");
+		String dirPath = System.getProperty("user.dir") + fs + "db"+ fs + "bank";
+		File dir = new File(dirPath);
+		if (!(dir.exists() && dir.isDirectory())) { // NOT (A && B) = NOT A || NOT B
+			dir.mkdirs();
+		}
+		
+    	return dirPath + fs + "data.db";
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getSQLiteDBPath());
+	}
+	
 }
 
 
