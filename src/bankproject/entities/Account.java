@@ -1,7 +1,8 @@
 package bankproject.entities;
 
 public class Account extends AbstractEntity {
-
+	
+	private Integer Id; 
 	private AccountNumber accountNumber;
 	private int balance;
 	
@@ -19,6 +20,22 @@ public class Account extends AbstractEntity {
 
 	public Account(AccountNumber accountNumber){
 		this.accountNumber = accountNumber; //a completar
+	}
+	
+	/**
+	 * getter
+	 * @return Id
+	 */
+	public Integer getId() {
+		return Id;
+	}
+
+	/**
+	 * setter
+	 * @param id
+	 */
+	public void setId(int id) {
+		Id = id;
 	}
 	
 	/**
@@ -52,6 +69,8 @@ public class Account extends AbstractEntity {
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
+
+	
 
 	
 }

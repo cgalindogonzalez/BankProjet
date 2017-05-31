@@ -2,12 +2,25 @@ package bankproject.entities;
 
 public class Customer extends AbstractEntity {
 	
-	
+	private Integer id;
 	private String surname;
 	private String name;
 
-	public Customer() {
-		// TODO Auto-generated constructor stub
+
+	/**
+	 * getter
+	 * @return surname
+	 */
+	public Integer getId() {
+		return id;
+	}
+
+	/**
+	 * setter
+	 * @param id
+	 */
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -42,4 +55,5 @@ public class Customer extends AbstractEntity {
 		this.name = name;
 	}
 
+	
 }

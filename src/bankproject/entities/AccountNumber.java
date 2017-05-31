@@ -4,15 +4,13 @@ public class AccountNumber {
 	
 	private CountryEnum country;
 	private int number;
-	private String identifier;
+
 	/**
-	 * Construteur
+	 * Constructor
 	 * @param country
 	 */
 	public AccountNumber(CountryEnum country) {
-		setCountry(country);
-		number = generateNumber();
-		identifier = createIdentifier(country, number);
+		createAccountNumber(country);
 
 	}
 
@@ -46,7 +44,8 @@ public class AccountNumber {
 	 * Méthode pour créer le numero de compte   
 	 * @return 
 	 */
-	private String createIdentifier(CountryEnum country, int number) {
+	private String createAccountNumber(CountryEnum country) {
+		number = generateNumber();
 		String str = country.getAbbreviation() + String.valueOf(number);
 		return str;
 	}
@@ -57,6 +56,6 @@ public class AccountNumber {
 	public static void main(String[] args) {
 		
 		AccountNumber accountNumber = new AccountNumber(CountryEnum.SPAIN);
-		System.out.println(accountNumber.identifier);
+		System.out.println(accountNumber); //NO FUNCIONA COMO YO QUIERO!!!
 	}
 }
