@@ -7,19 +7,18 @@ public class Account extends AbstractEntity {
 	private int balance;
 	
 	/**
-	 * Constructeur par défaut
+	 * Default constructor
 	 */
-	public Account() {
+	public Account () {
 		accountNumber = null;
 		setBalance(0);
 	}
-	
 	/**
-	 * Constructeur
+	 * Constructor
 	 */
 
-	public Account(AccountNumber accountNumber){
-		this.accountNumber = accountNumber; //a completar
+	public Account(CountryEnum country){
+		accountNumber = new AccountNumber (country);
 	}
 	
 	/**
@@ -70,7 +69,11 @@ public class Account extends AbstractEntity {
 		this.balance = balance;
 	}
 
-	
+public static void main(String[] args) {
+		
+		Account account = new Account(CountryEnum.SPAIN);
+		System.out.println(account.getAccountNumber().toString()); //NO FUNCIONA COMO YO QUIERO!!!
+	}
 
 	
 }
