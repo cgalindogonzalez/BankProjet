@@ -2,7 +2,7 @@ package bankproject.entities;
 
 public class Account extends AbstractEntity {
 	
-	private Integer Id; 
+	private Integer id; 
 	private AccountNumber accountNumber;
 	private int balance;
 	
@@ -18,15 +18,16 @@ public class Account extends AbstractEntity {
 	 */
 
 	public Account(CountryEnum country){
+		
 		accountNumber = new AccountNumber (country);
 	}
 	
 	/**
 	 * getter
-	 * @return Id
+	 * @return id
 	 */
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class Account extends AbstractEntity {
 	 * @param id
 	 */
 	public void setId(int id) {
-		Id = id;
+		id = id;
 	}
 	
 	/**

@@ -9,7 +9,7 @@ public class Customer extends AbstractEntity {
 
 	/**
 	 * getter
-	 * @return surname
+	 * @return id
 	 */
 	public Integer getId() {
 		return id;

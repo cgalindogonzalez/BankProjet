@@ -4,16 +4,28 @@ import java.sql.Date;
 
 public class Operation extends AbstractEntity {
 	
+	private Integer id;
 	private Date date;
-	private Customer customer;
 	private TypeEnum type;
 	private int amount;
 	
 
-	public Operation() {
-		// TODO Auto-generated constructor stub
+	/**
+	 * getter
+	 * @return id
+	 */
+	public Integer getId() {
+		return id;
 	}
 
+	/**
+	 * setter
+	 * @param id
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	/**
 	 * getter
 	 * @return date
@@ -28,22 +40,6 @@ public class Operation extends AbstractEntity {
 	 */
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	/**
-	 * getter
-	 * @return customer
-	 */
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	/**
-	 * setter
-	 * @param customer
-	 */
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
 	}
 
 	/**
