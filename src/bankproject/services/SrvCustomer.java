@@ -93,6 +93,32 @@ public class SrvCustomer extends AbstractService{
 		}
 	}
 	
+	private void delete(Customer entity) throws SQLException {
+		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE id = ? AND name = ? AND surname = ?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		
+		try{
+			connection = getDbManager().getConnection();
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, entity.getId());
+			ps.setString(2, entity.getName());
+			ps.setString(2, entity.getSurname());
+			ps.execute();
+			
+		} catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+			
+			if (ps != null) {
+				ps.close();
+			}		
+		}
+	}
+	
 	@Override
 	public void save(AbstractEntity entity) throws SrvException, SQLException {
 		if (entity instanceof Customer) {

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import bankproject.entities.AbstractEntity;
+import bankproject.entities.Account;
 import bankproject.entities.Customer;
 import bankproject.entities.Operation;
 import bankproject.exceptions.SrvException;
@@ -91,6 +92,32 @@ public class SrvOperation extends AbstractService {
 			if (ps != null) {
 				ps.close();
 			}
+		}
+	}
+	
+	private void delete(Operation entity) throws SQLException {
+		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE id = ? AND date = ? AND amount = ?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		
+		try{
+			connection = getDbManager().getConnection();
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, entity.getId());
+			ps.setDate(2, entity.getDate());
+			ps.setInt(2, entity.getAmount());
+			ps.execute();
+			
+		} catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+			
+			if (ps != null) {
+				ps.close();
+			}		
 		}
 	}
 	
