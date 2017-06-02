@@ -35,7 +35,7 @@ public class Account extends AbstractEntity {
 	 * @param id
 	 */
 	public void setId(int id) {
-		id = id;
+		this.id = id;
 	}
 	
 	/**
@@ -69,6 +69,23 @@ public class Account extends AbstractEntity {
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
+	
+	/**
+	 * 
+	 * @param money
+	 */
+	public void addMoneyToBalance (int money){
+		balance = balance + money;
+	}
+	
+	/**
+	 * 
+	 * @param money
+	 */
+	public void removeMoneyToBalance(int money){
+		balance = balance - money;
+	}
+	
 
 public static void main(String[] args) {
 		
