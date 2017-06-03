@@ -1,8 +1,11 @@
 package bankproject.readers;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AbstractReaderThread extends Thread {
 
@@ -22,26 +25,50 @@ public class AbstractReaderThread extends Thread {
 	}
 	
 	/**
-	 * method to read a file 
+	 * method to read a text file and put the words in a list
 	 * @param fileName
+	 * @return allWords
 	 */
-	public void readInputFile(String fileName) {
-		String file = getInputTxtFilePath() + fileName + ".txt";
+	public static List<String> readInputFile(String fileName) {
+		String file = getInputTxtFilePath() + System.getProperty("file.separator") +fileName + ".txt";
+		List<String> allWords = new ArrayList<String>();
 		try {
 			FileReader input = new FileReader (file);
-			int c = 0;
-			while(c!=-1) {
-				c = input.read();
-				char letter = (char)c;
-				System.out.println(letter);
+			BufferedReader myBuffer = new BufferedReader (input);
+			String line = myBuffer.readLine();
+			
+			while(line != null) {
+				String[] word = line.split("\t\t\t");
+				if (line!=null)
+					for(int i = 0; i<word.length; i ++) {
+						if((word[i]!=null)&&(word[i]!="\n"))
+						allWords.add(word[i]);	
+					}
+				line = myBuffer.readLine();			
+		    
 			}
 			
-			input.close();
+			myBuffer.close();
 			
 		} catch (IOException e) {
 			System.out.println("File not found");
 		}
+		return allWords;
+		
 	}
 	
+	/**
+	 * Method to delete a file 
+	 * @param fileName
+	 */
+	public void deleteInputFile(String fileName) {
+		String pathFile = getInputTxtFilePath() + fileName + ".txt";
+		File file = new File(pathFile);
+		file.delete();
+	}
 	
+	public static void main(String[] args) {
+		List<String> allWords = readInputFile("accounts_customers");
+		System.out.println(allWords.get(8));
+	}
 }

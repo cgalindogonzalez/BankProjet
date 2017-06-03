@@ -1,44 +1,45 @@
 package bankproject.writers;
 
-public class BankStatementThread extends Thread {
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
-	public BankStatementThread() {
-		// TODO Auto-generated constructor stub
+public class BankStatementThread extends AbstractWriterThread {
+	//Cambiar a privado??
+	public String header = "Date\t\tAccount\t\tCustomer\t\tType\t\tAmount\r\n";
+	
+	public void run() {
+		writeHeaderOutputFile ("statements", header);
+		writeContentsOutputFile();
+		try {
+			Thread.sleep(780000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
-
-	public BankStatementThread(Runnable target) {
-		super(target);
-		// TODO Auto-generated constructor stub
+	
+	/**
+	 *Method to add the contents to the statements.txt file (without headers) 
+	 */
+	public void writeContentsOutputFile() {
+		String fn = getOutputTxtFilePath() + System.getProperty("file.separator") + "statements.txt";
+		try {
+			FileWriter output = new FileWriter (fn, true);
+			BufferedWriter myBuffer = new BufferedWriter (output);
+			myBuffer.write("prueba");
+			myBuffer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
-	public BankStatementThread(String name) {
-		super(name);
-		// TODO Auto-generated constructor stub
+	
+	public static void main(String[] args){
+		//System.out.println(headline);
+		BankStatementThread bst = new BankStatementThread();
+		bst.start();
 	}
-
-	public BankStatementThread(ThreadGroup group, Runnable target) {
-		super(group, target);
-		// TODO Auto-generated constructor stub
-	}
-
-	public BankStatementThread(ThreadGroup group, String name) {
-		super(group, name);
-		// TODO Auto-generated constructor stub
-	}
-
-	public BankStatementThread(Runnable target, String name) {
-		super(target, name);
-		// TODO Auto-generated constructor stub
-	}
-
-	public BankStatementThread(ThreadGroup group, Runnable target, String name) {
-		super(group, target, name);
-		// TODO Auto-generated constructor stub
-	}
-
-	public BankStatementThread(ThreadGroup group, Runnable target, String name, long stackSize) {
-		super(group, target, name, stackSize);
-		// TODO Auto-generated constructor stub
-	}
-
 }

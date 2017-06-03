@@ -54,12 +54,12 @@ public class SrvOperation extends AbstractService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			if (connection != null) {
-				connection.close();
+			if (ps != null) {
+			ps.close();
 			}
 			
-			if (ps != null) {
-				ps.close();
+			if (connection != null) {
+			connection.close();
 			}
 		}
 	}
@@ -85,12 +85,12 @@ public class SrvOperation extends AbstractService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			if (connection != null) {
-				connection.close();
+			if (ps != null) {
+			ps.close();
 			}
 			
-			if (ps != null) {
-				ps.close();
+			if (connection != null) {
+			connection.close();
 			}
 		}
 	}
@@ -111,13 +111,13 @@ public class SrvOperation extends AbstractService {
 		} catch (SQLException e) {
 				e.printStackTrace();
 		} finally {
-			if (connection != null) {
-				connection.close();
+			if (ps != null) {
+			ps.close();
 			}
 			
-			if (ps != null) {
-				ps.close();
-			}		
+			if (connection != null) {
+			connection.close();
+			}
 		}
 	}
 	

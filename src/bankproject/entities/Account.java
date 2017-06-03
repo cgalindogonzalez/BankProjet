@@ -90,7 +90,7 @@ public class Account extends AbstractEntity {
 public static void main(String[] args) {
 		
 		Account account = new Account(CountryEnum.SPAIN);
-		System.out.println(account.getAccountNumber().toString()); //NO FUNCIONA COMO YO QUIERO!!!
+		System.out.println(account.getAccountNumber().toString());
 	}
 
 	

@@ -1,5 +1,6 @@
 package bankproject.writers;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,14 +22,34 @@ public class AbstractWriterThread extends Thread {
 		return pathDir;
 	}
 	
-	public void writeOutputFile (String fileName) {
-		String sentence = "prueba";
-		String file = getOutputTxtFilePath() + fileName + ".txt"; 
+	/**
+	 * Method to create a new file in \tmp\bank\output
+	 * @param fileName
+	 */
+	public void createOutputFile(String fileName) {
+		String pathFile = getOutputTxtFilePath() + System.getProperty("file.separator") + fileName + ".txt";
+		File file = new File(pathFile);
+		
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Method to create a file in  \tmp\bank\output with the header
+	 * @param fileName
+	 * @param headline
+	 */
+	public void writeHeaderOutputFile (String fileName, String header) {
+		String file = getOutputTxtFilePath() + System.getProperty("file.separator") +fileName + ".txt"; 
 		try {
 			FileWriter output = new FileWriter (file);
-			for(int i=0; i<sentence.length(); i++) {
-				output.write(sentence.charAt(i));
-			}
+			BufferedWriter myBuffer = new BufferedWriter (output);
+			myBuffer.write(header);
+			myBuffer.close();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
