@@ -2,25 +2,25 @@ package bankproject.entities;
 
 public class Customer extends AbstractEntity {
 	
-	private Integer id;
+	private Integer idCustomer;
 	private String surname;
 	private String name;
 
 
 	/**
 	 * getter
-	 * @return id
+	 * @return idCustomer
 	 */
-	public Integer getId() {
-		return id;
+	public Integer getIdCustomer() {
+		return idCustomer;
 	}
 
 	/**
 	 * setter
-	 * @param id
+	 * @param idCustomer
 	 */
-	public void setId(Integer id) {
-		this.id = id;
+	public void setIdCustomer(Integer idCustomer) {
+		this.idCustomer = idCustomer;
 	}
 
 	/**

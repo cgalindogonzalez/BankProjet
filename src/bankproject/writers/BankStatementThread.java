@@ -4,8 +4,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class BankStatementThread extends AbstractWriterThread {
-	//Cambiar a privado??
+public class BankStatementThread extends WriterThread {
+	
 	public String header = "Date\t\tAccount\t\tCustomer\t\tType\t\tAmount\r\n";
 	
 	public void run() {
@@ -28,7 +28,14 @@ public class BankStatementThread extends AbstractWriterThread {
 		try {
 			FileWriter output = new FileWriter (fn, true);
 			BufferedWriter myBuffer = new BufferedWriter (output);
-			myBuffer.write("prueba");
+			myBuffer.write("contents"); 
+			/*I HAVE TO FINISH THIS TO ADD THE CONTENT OF THE FILE statements.txt :
+			 * make the query to the DB with the getters to get entities or collections of entities of AbstractService class (with entity = operation)
+			 * print out the fields' values (date, account, customer, type, amount) line by line as content 
+			*/
+			
+			
+			
 			myBuffer.close();
 			
 		} catch (IOException e) {

@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class AbstractWriterThread extends Thread {
+public class WriterThread extends Thread {
 
 	/**
 	 * method to obtain (or create and obtain if doesn't exist) the path: \tmp\bank\output 

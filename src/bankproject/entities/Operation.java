@@ -1,36 +1,36 @@
 package bankproject.entities;
 
-import java.sql.Date;
+import java.util.GregorianCalendar;
 
 public class Operation extends AbstractEntity {
 	
-	private Integer id;
-	private Date date;
+	private Integer idOperation;
+	private GregorianCalendar date;
 	private TypeEnum type;
 	private int amount;
 	
 
 	/**
 	 * getter
-	 * @return id
+	 * @return idOperation
 	 */
-	public Integer getId() {
-		return id;
+	public Integer getIdOperation() {
+		return idOperation;
 	}
 
 	/**
 	 * setter
-	 * @param id
+	 * @param idOperation
 	 */
-	public void setId(Integer id) {
-		this.id = id;
+	public void setIdOperation(Integer idOperation) {
+		this.idOperation = idOperation;
 	}
 	
 	/**
 	 * getter
 	 * @return date
 	 */
-	public Date getDate() {
+	public GregorianCalendar getDate() {
 		return date;
 	}
 
@@ -38,7 +38,7 @@ public class Operation extends AbstractEntity {
 	 * setter
 	 * @param date
 	 */
-	public void setDate(Date date) {
+	public void setDate(GregorianCalendar date) {
 		this.date = date;
 	}
 

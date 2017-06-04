@@ -36,7 +36,7 @@ public class SrvCustomer extends AbstractService{
 	 * @param entity
 	 * @throws SQLException
 	 */
-	private void create(Customer entity) throws SQLException {
+	public void create(Customer entity) throws SQLException {
 		String sql = "INSERT INTO " + getEntitySqlTable() + " (name, surname) VALUES (?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -68,7 +68,7 @@ public class SrvCustomer extends AbstractService{
 	 * @throws SQLException
 	 */
 	private void update(Customer entity) throws SQLException {
-		String sql = "UPDATE " + getEntitySqlTable() + " SET name = ?, surname = ? WHERE id = ?";
+		String sql = "UPDATE " + getEntitySqlTable() + " SET name = ?, surname = ? WHERE idcustomer = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
@@ -77,7 +77,7 @@ public class SrvCustomer extends AbstractService{
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, entity.getName());
 			ps.setString(2, entity.getSurname());
-			ps.setInt(3, entity.getId());
+			ps.setInt(3, entity.getIdCustomer());
 			ps.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -94,14 +94,14 @@ public class SrvCustomer extends AbstractService{
 	}
 	
 	private void delete(Customer entity) throws SQLException {
-		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE id = ? AND name = ? AND surname = ?";
+		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE idcustomer = ? AND name = ? AND surname = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
 		try{
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, entity.getId());
+			ps.setInt(1, entity.getIdCustomer());
 			ps.setString(2, entity.getName());
 			ps.setString(2, entity.getSurname());
 			ps.execute();
@@ -123,7 +123,7 @@ public class SrvCustomer extends AbstractService{
 	public void save(AbstractEntity entity) throws SrvException, SQLException {
 		if (entity instanceof Customer) {
 			Customer customer = (Customer)entity;
-			if (customer.getId() == null) {
+			if (customer.getIdCustomer() == null) {
 				create(customer);
 			} else {
 				update(customer);
@@ -136,7 +136,7 @@ public class SrvCustomer extends AbstractService{
 	@Override
 	protected Customer populateEntity(ResultSet rs) throws SQLException {
 		Customer customer = new Customer();
-		customer.setId(rs.getInt("id"));
+		customer.setIdCustomer(rs.getInt("idcustomer"));
 		customer.setName(rs.getString("name"));
 		customer.setSurname(rs.getString("surname"));
 		
@@ -146,7 +146,7 @@ public class SrvCustomer extends AbstractService{
 	public String createTableInDB () {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE IF NOT EXISTS customer ( ")
-			.append("id INTEGER PRIMARY KEY AUTOINCREMENT, ")
+			.append("idcustomer INTEGER PRIMARY KEY AUTOINCREMENT, ")
 			.append("name TEXT, ")
 			.append("surname TEXT ")
 			.append(")");

@@ -14,7 +14,7 @@ public class SQLiteManager extends DatabaseManager {
 	 * Private constructor
 	 */
 	private SQLiteManager() {
-		url = "jdbc:sqlite"+ getSQLiteDBPath();
+		url = "jdbc:sqlite:"+ getSQLiteDBPath();
 	}
 	
 	/**
@@ -53,9 +53,6 @@ public class SQLiteManager extends DatabaseManager {
     	return dirPath + fs + "data.db";
 	}
 
-	public static void main(String[] args) {
-		System.out.println(getSQLiteDBPath());
-	}
 	
 }
 

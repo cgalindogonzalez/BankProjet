@@ -65,7 +65,7 @@ public abstract class AbstractService {
 	 * @return
 	 * @throws Exception
 	 */
-	public AbstractEntity get(Integer id) throws Exception {
+	public AbstractEntity get(Integer id, String str) throws Exception {
 		Connection connexion = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -73,7 +73,7 @@ public abstract class AbstractService {
 		
 		StringBuilder query = new StringBuilder("SELECT * FROM ");
 		query.append(getEntitySqlTable());
-		query.append(" WHERE id = ?");
+		query.append(" WHERE str = ?");
 		try {
 			connexion = getDbManager().getConnection();
 			pst = connexion.prepareStatement(query.toString());

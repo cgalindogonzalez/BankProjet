@@ -38,7 +38,7 @@ public class SrvAccount extends AbstractService {
 	 * @param entity
 	 * @throws SQLException
 	 */
-	private void create(Account entity) throws SQLException {
+	public void create(Account entity) throws SQLException {
 		String str = "INSERT INTO" + getEntitySqlTable() + "(accountnumber, balance) VALUES (?,?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -65,8 +65,8 @@ public class SrvAccount extends AbstractService {
 		}
 	}
 	
-	private void update (Account entity) throws SQLException {
-		String str = "UPDATE" + getEntitySqlTable() + "SET accountnumber = ?, balance = ? WHERE Id = ?";
+	public void update (Account entity) throws SQLException {
+		String str = "UPDATE" + getEntitySqlTable() + "SET accountnumber = ?, balance = ? WHERE idaccount = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
@@ -75,7 +75,7 @@ public class SrvAccount extends AbstractService {
 			ps = connection.prepareStatement(str);
 			ps.setObject(1, entity.getAccountNumber());
 			ps.setInt(2, entity.getBalance());
-			ps.setInt(3, entity.getId());
+			ps.setInt(3, entity.getIdAccount());
 			
 			ps.execute();
 		
@@ -94,16 +94,16 @@ public class SrvAccount extends AbstractService {
 	}
 	
 	private void delete(Account entity) throws SQLException {
-		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE id = ? AND accountnumber = ? AND balance = ?";
+		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE idaccount = ? AND accountnumber = ? AND balance = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
 		try{
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, entity.getId());
+			ps.setInt(1, entity.getIdAccount());
 			ps.setObject(2, entity.getAccountNumber());
-			ps.setInt(2, entity.getBalance());
+			ps.setInt(3, entity.getBalance());
 			ps.execute();
 			
 		} catch (SQLException e) {
@@ -124,7 +124,7 @@ public class SrvAccount extends AbstractService {
 
 		if (entity instanceof Account) {
 			Account account = (Account)entity;
-			if (account.getId() == null) {
+			if (account.getIdAccount() == null) {
 				create(account);
 			} else {
 				update(account);
@@ -140,7 +140,7 @@ public class SrvAccount extends AbstractService {
 	@Override
 	protected AbstractEntity populateEntity(ResultSet rs) throws SQLException, Exception {
 		Account account = new Account();
-		account.setId(rs.getInt("id"));
+		account.setIdAccount(rs.getInt("idaccount"));
 		account.setAccountNumber((AccountNumber) rs.getObject("accountnumber"));
 		account.setBalance(rs.getInt("balance"));
 		
@@ -150,9 +150,10 @@ public class SrvAccount extends AbstractService {
 	public String createTableInDB () {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE IF NOT EXISTS account ( ")
-			.append("id INTEGER PRIMARY KEY AUTOINCREMENT, ")
+			.append("idaccount INTEGER PRIMARY KEY AUTOINCREMENT, ")
 			.append("accountnumber TEXT, ")
-			.append("balance INTEGER ")
+			.append("balance INTEGER, ")
+			.append("FOREIGN KEY(accountnumber) REFERENCES customer(idcustomer) ON DELETE CASCADE")
 			.append(")");
 		
 		return sb.toString();

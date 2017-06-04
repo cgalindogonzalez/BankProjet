@@ -10,8 +10,12 @@ public class AccountNumber {
 	 * @param country
 	 */
 	public AccountNumber(CountryEnum country) {
-		createAccountNumber(country);
+		createAccountNumberFromRandomNumber(country);
 
+	}
+	
+	public AccountNumber (String str) {
+		createAccountNumberFromString(str);
 	}
 
 
@@ -47,22 +51,14 @@ public class AccountNumber {
 	 * Méthode pour créer le numero de compte   
 	 * @return 
 	 */
-	public String createAccountNumber(CountryEnum country) {
+	public String createAccountNumberFromRandomNumber(CountryEnum country) {
 		number = generateNumber();
 		String str = country.getAbbreviation() + String.valueOf(number);
 		return str;
 	}
 	
-	public String toString(){
-		  return createAccountNumber(CountryEnum.SPAIN);
-		  }
-	
-	
-	// falta comprobar que el identificador no exista ya en la base de datos!!!!  
-
-	public static void main(String[] args) {
-		
-		AccountNumber accountNumber = new AccountNumber(CountryEnum.SPAIN);
-		System.out.println(accountNumber.toString()); 
+	public String createAccountNumberFromString(String str) {
+		return str;
 	}
+	
 }

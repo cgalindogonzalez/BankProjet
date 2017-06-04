@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractReaderThread extends Thread {
+public class ReaderThread extends Thread {
 
 	/**
 	 * method to obtain (or create and obtain if doesn't exist) the path: \tmp\bank\input 
@@ -67,8 +67,4 @@ public class AbstractReaderThread extends Thread {
 		file.delete();
 	}
 	
-	public static void main(String[] args) {
-		List<String> allWords = readInputFile("accounts_customers");
-		System.out.println(allWords.get(8));
-	}
 }
