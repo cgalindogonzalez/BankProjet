@@ -22,6 +22,7 @@ public class Main {
 		Connection connection = srvCustomer.getDbManager().getConnection();
 		Statement st = connection.createStatement();
 		st.execute(srvCustomer.createTableInDB());
+		st.close();
 		connection.close();
 
 		SrvAccount srvAccount = SrvAccount.getINSTANCE();
@@ -29,6 +30,7 @@ public class Main {
 		Connection connection1 = srvAccount.getDbManager().getConnection();
 		Statement st1 = connection1.createStatement();
 		st1.execute(srvAccount.createTableInDB());
+		st1.close();
 		connection1.close();
 		
 		SrvOperation srvOperation = SrvOperation.getINSTANCE();
@@ -36,6 +38,7 @@ public class Main {
 		Connection connection2 = srvOperation.getDbManager().getConnection();
 		Statement st2 = connection2.createStatement();
 		st2.execute(srvOperation.createTableInDB());
+		st2.close();
 		connection2.close();
 		
 		//Threads launching
