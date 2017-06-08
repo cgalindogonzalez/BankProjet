@@ -1,10 +1,14 @@
 package bankproject.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Customer extends AbstractEntity {
 	
 	private Integer idCustomer;
 	private String surname;
 	private String name;
+	private Set<Account> accountsList = new HashSet<Account>();
 
 
 	/**
@@ -53,6 +57,26 @@ public class Customer extends AbstractEntity {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * getter
+	 * @return accountsList
+	 */
+	public Set<Account> getAccountsList() {
+		return accountsList;
+	}
+
+	/**
+	 * setter
+	 * @param accountsList
+	 */
+	public void setAccountsList(Set<Account> accountsList) {
+		this.accountsList.addAll(accountsList);
+	}
+	
+	public void addAccountToAccountsList(Account account) {
+		this.accountsList.add(account);
 	}
 
 	

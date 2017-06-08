@@ -1,10 +1,14 @@
 package bankproject.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Account extends AbstractEntity {
 	
 	private Integer idAccount; 
 	private AccountNumber accountNumber;
 	private int balance;
+	private List<Operation> operationsList = new ArrayList<Operation>(); 
 	
 	/**
 	 * Default constructor
@@ -80,6 +84,29 @@ public class Account extends AbstractEntity {
 	}
 	
 	/**
+	 * getter
+	 * @return operationsList
+	 */
+	public List<Operation> getOperationsList() {
+		return operationsList;
+	}
+	
+	/**
+	 * setter
+	 * @param operationsList
+	 */
+	public void setOperationsList(List<Operation> operationsList) {
+		this.operationsList.addAll(operationsList);
+	}
+	
+	/**
+	 * 
+	 * @param operation
+	 */
+	public void addOperationToOperationsList (Operation operation) {
+		this.operationsList.add(operation);
+	}
+	/**
 	 * 
 	 * @param money
 	 */
@@ -94,6 +121,7 @@ public class Account extends AbstractEntity {
 	public void removeMoneyToBalance(int money){
 		balance = balance - money;
 	}
+	
 	
 
 
