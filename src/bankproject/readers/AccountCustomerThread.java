@@ -36,7 +36,7 @@ public class AccountCustomerThread extends ReaderThread  {
 			account.setBalance(Integer.parseInt(wordsOfTheFile.get(4*i+3)));   
 		
 			SrvAccount srvAccount = SrvAccount.getINSTANCE();
-			srvAccount.setDbManager(SQLiteManager.getInstance());
+			srvAccount.setDbManager(SQLiteManager.getInstance());//CORREGIR!!!
 			try {
 				srvAccount.create(account);
 			} catch (SQLException e1) {

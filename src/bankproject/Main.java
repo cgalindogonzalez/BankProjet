@@ -26,12 +26,13 @@ public class Main {
 
 		SrvAccount srvAccount = SrvAccount.getINSTANCE();
 		st.execute(srvAccount.createTableInDB());
-				
+
 		SrvOperation srvOperation = SrvOperation.getINSTANCE();
 		st.execute(srvOperation.createTableInDB());
 		
 		st.close();
 		connection.close();
+
 		
 		//Threads launching
 		

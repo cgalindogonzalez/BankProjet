@@ -22,7 +22,7 @@ public class OperationThread extends ReaderThread {
 			operation.setDate(new GregorianCalendar());
 			
 			SrvOperation srvOperation = SrvOperation.getINSTANCE();
-			srvOperation.setDbManager(SQLiteManager.getInstance());
+			srvOperation.setDbManager(SQLiteManager.getInstance());//CORREGIR!!!!
 			try {
 				srvOperation.create(operation);
 			} catch (SQLException e1) {
@@ -34,7 +34,7 @@ public class OperationThread extends ReaderThread {
 			Account account = new Account (accountNumber);
 			
 			SrvAccount srvAccount = SrvAccount.getINSTANCE();
-			srvAccount.setDbManager(SQLiteManager.getInstance());
+			srvAccount.setDbManager(SQLiteManager.getInstance());//CORREGIR!!!!
 			try {
 				srvAccount.update(account);
 			} catch (SQLException e1) {
