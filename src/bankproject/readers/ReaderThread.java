@@ -61,10 +61,14 @@ public class ReaderThread extends Thread {
 	 * Method to delete a file 
 	 * @param fileName
 	 */
-	public void deleteInputFile(String fileName) {
-		String pathFile = getInputTxtFilePath() + fileName + ".txt";
+	public static void deleteInputFile(String fileName) {
+		String pathFile = getInputTxtFilePath() + System.getProperty("file.separator") + fileName + ".txt";
 		File file = new File(pathFile);
 		file.delete();
 	}
 	
+	public static void main (String[] args) {		
+		
+		
+	}
 }

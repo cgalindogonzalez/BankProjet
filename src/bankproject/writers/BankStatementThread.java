@@ -3,6 +3,7 @@ package bankproject.writers;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.ResultSet;
 
 public class BankStatementThread extends WriterThread {
 	
@@ -28,7 +29,18 @@ public class BankStatementThread extends WriterThread {
 		try {
 			FileWriter output = new FileWriter (fn, true);
 			BufferedWriter myBuffer = new BufferedWriter (output);
-			myBuffer.write("contents"); 
+			
+//			ResultSet rs;
+			StringBuilder contents = new StringBuilder();
+//			while(rs.next()) {
+//				contents.append(rs.getString(1));
+				
+//			}
+			contents.append("hello");
+			contents.append(" world\n");
+			contents.append("otra linea\t\tmás lejos");
+			myBuffer.write(contents.toString()); 
+			
 			/*I HAVE TO FINISH THIS TO ADD THE CONTENT OF THE FILE statements.txt :
 			 * make the query to the DB with the getters to get entities or collections of entities of AbstractService class (with entity = operation)
 			 * print out the fields' values (date, account, customer, type, amount) line by line as content 
@@ -38,14 +50,14 @@ public class BankStatementThread extends WriterThread {
 			
 			myBuffer.close();
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public static void main(String[] args){
-		//System.out.println(headline);
+		
 		BankStatementThread bst = new BankStatementThread();
 		bst.start();
 	}

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import bankproject.entities.AbstractEntity;
 import bankproject.entities.Account;
 import bankproject.entities.AccountNumber;
-import bankproject.entities.Customer;
+import bankproject.entities.CountryEnum;
 import bankproject.exceptions.SrvException;
 
 public class SrvAccount extends AbstractService {
@@ -159,6 +159,23 @@ public class SrvAccount extends AbstractService {
 		return sb.toString();
 	}
 
-	
+	public static void main(String[] args) {
+		SrvAccount srvAccount = SrvAccount.getINSTANCE();
+		srvAccount.setDbManager(SQLiteManager.getInstance());
+		Account account = new Account(CountryEnum.SPAIN);
+		AccountNumber accountNumber = account.getAccountNumber();
+		account.setBalance(50);
+		int balance = account.getBalance();
+		
+		System.out.println(accountNumber + " " + balance);
+//		try {
+//			srvAccount.create(account);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+	}
 
 }

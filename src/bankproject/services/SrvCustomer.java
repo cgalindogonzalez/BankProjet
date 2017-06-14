@@ -50,7 +50,8 @@ public class SrvCustomer extends AbstractService{
 			ps.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Error del método create");
 		} finally {
 			if (ps != null) {
 			ps.close();
@@ -154,6 +155,24 @@ public class SrvCustomer extends AbstractService{
 		return sb.toString();
 	}
 
+	public static void main (String[] args) {
+		SrvCustomer srvCustomer = SrvCustomer.getINSTANCE();
+		srvCustomer.setDbManager(SQLiteManager.getInstance());
+		
+		Customer customer = new Customer();
+		customer.setName("Cecilia");
+		customer.setSurname("Galindo");
+		
+		System.out.println(customer.getName()+customer.getSurname());
+		
+		try {
+			srvCustomer.create(customer);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 
 }

@@ -1,6 +1,5 @@
 package bankproject.services;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.sql.Connection;
 import java.sql.Date;
@@ -9,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import bankproject.entities.AbstractEntity;
-import bankproject.entities.Account;
-import bankproject.entities.Customer;
 import bankproject.entities.Operation;
 import bankproject.exceptions.SrvException;
 
@@ -42,14 +39,14 @@ public class SrvOperation extends AbstractService {
 	 * @throws SQLException
 	 */
 	public void create(Operation entity) throws SQLException {
-		String str = "INSERT INTO " + getEntitySqlTable() + " (date, amount) VALUES (?, ?, ?, ?)";
+		String str = "INSERT INTO " + getEntitySqlTable() + " (date, amount) VALUES (?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
 		try {
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(str);
-			ps.setDate(1, (Date) entity.getDate().getGregorianChange());
+			ps.setString(1, entity.getDate().getGregorianChange().toString());//FUNCIONA, PERO NO ESTOY SEGURA DE QUE SEA CORRECTO, XQ ES STRING Y EN LA TABLA ES DATE	
 			ps.setInt(2, entity.getAmount());
 	
 			ps.execute();

@@ -4,6 +4,7 @@ public class AccountNumber {
 	
 	private CountryEnum country;
 	private int number;
+	
 
 	/**
 	 * Constructor
@@ -60,5 +61,7 @@ public class AccountNumber {
 	public String createAccountNumberFromString(String str) {
 		return str;
 	}
+	
+	
 	
 }
