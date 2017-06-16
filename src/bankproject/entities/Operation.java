@@ -8,6 +8,7 @@ public class Operation extends AbstractEntity {
 	private GregorianCalendar date;
 	private TypeEnum type;
 	private int amount;
+	private Account account;
 	
 
 	/**
@@ -72,6 +73,14 @@ public class Operation extends AbstractEntity {
 	 */
 	public void setAmount(int amount) {
 		this.amount = amount;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 }

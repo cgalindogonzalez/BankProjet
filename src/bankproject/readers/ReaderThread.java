@@ -38,7 +38,7 @@ public class ReaderThread extends Thread {
 			String line = myBuffer.readLine();
 			
 			while(line != null) {
-				String[] word = line.split("\t\t\t");
+				String[] word = line.split("\t\t\t");//solo un tab
 				if (line!=null)
 					for(int i = 0; i<word.length; i ++) {
 						if((word[i]!=null)&&(word[i]!="\n"))
@@ -53,7 +53,7 @@ public class ReaderThread extends Thread {
 		} catch (IOException e) {
 			System.out.println("File not found");
 		}
-		return allWords;
+		return allWords; //LISTA DE LISTAS?? 
 		
 	}
 	

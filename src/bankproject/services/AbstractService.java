@@ -65,7 +65,7 @@ public abstract class AbstractService {
 	 * @return
 	 * @throws Exception
 	 */
-	public AbstractEntity get(Integer id, String str) throws Exception {
+	public AbstractEntity get(Integer id) throws Exception {
 		Connection connexion = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -73,7 +73,8 @@ public abstract class AbstractService {
 		
 		StringBuilder query = new StringBuilder("SELECT * FROM ");
 		query.append(getEntitySqlTable());
-		query.append(" WHERE str = ?");
+		query.append(" WHERE id = ?");
+		
 		try {
 			connexion = getDbManager().getConnection();
 			pst = connexion.prepareStatement(query.toString());
@@ -87,12 +88,11 @@ public abstract class AbstractService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			if (connexion != null) {
-				connexion.close();
-			}
-			
 			if (pst != null) {
 				pst.close();
+			}
+			if (connexion != null) {
+				connexion.close();
 			}
 		}
 		
@@ -157,4 +157,13 @@ public abstract class AbstractService {
 		
 		return results;
 	}
+	
+	public static void main(String[] args) {
+		StringBuilder query = new StringBuilder("SELECT * FROM ");
+		query.append("customer");
+		query.append(" WHERE id = ?");
+		System.out.println(query.toString());
+		
+	}
 }
+

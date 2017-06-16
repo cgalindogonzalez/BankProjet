@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.TimeZone;
 
 import bankproject.entities.Account;
-import bankproject.entities.AccountNumber;
 import bankproject.entities.CountryEnum;
 import bankproject.entities.Customer;
 import bankproject.entities.Operation;
+import bankproject.exceptions.SrvException;
 import bankproject.services.SQLiteManager;
 import bankproject.services.SrvAccount;
 import bankproject.services.SrvCustomer;
@@ -20,7 +20,7 @@ public class AccountCustomerThread extends ReaderThread  {
 	
 	public void run(){
 		
-		List<String> wordsOfTheFile = readInputFile("accounts_customers");//Y SI EL FICHERO NO EXISTE?? (ALGO APARTE DEL TRY/CATCH?)
+		List<String> wordsOfTheFile = readInputFile("accounts_customers");
 		
 		
 		for (int i=1; i< wordsOfTheFile.size()/4; i++) {
@@ -28,26 +28,50 @@ public class AccountCustomerThread extends ReaderThread  {
 			customer.setName(wordsOfTheFile.get(4*i+2)) ;
 			customer.setSurname(wordsOfTheFile.get(4*i+1));
 			
-			CountryEnum country = CountryEnum.valueOf(wordsOfTheFile.get(4*i).toUpperCase());
-			//NO FUNCIONA PORQUE NO DA EL NUMERO DE CUENTA
-			Account account = new Account(country); //I HAVE TO CHECK IF THE GENERATED RANDOM accountNumber ALREADY EXISTS IN THE DB AND IF SO GENERATE ANOTHER ONE AND BACK TO CHECK 
-			account.setBalance(Integer.parseInt(wordsOfTheFile.get(4*i+3)));
-			
 			SrvCustomer srvCustomer = SrvCustomer.getINSTANCE();
-			SrvAccount srvAccount = SrvAccount.getINSTANCE();
-			srvCustomer.setDbManager(SQLiteManager.getInstance());
-			
+			srvCustomer.setDbManager(SQLiteManager.getInstance());	
 			try {
-			srvCustomer.create(customer); //save EN VEZ DE create?
-			srvAccount.create(account); //save EN VEZ DE create?
+				srvCustomer.save(customer);
+				customer = srvCustomer.getCustomerByNameSurname(customer.getName(), customer.getSurname());
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			} catch (SQLException e) {
+			
+			CountryEnum country = CountryEnum.valueOf(wordsOfTheFile.get(4*i).toUpperCase());
+			Account account = null;
+			Account accountDB = null;
+			do {
+				account = new Account(country, customer); 
+				SrvAccount srvAccount = SrvAccount.getINSTANCE();
+				srvAccount.setDbManager(SQLiteManager.getInstance());
+				try {
+					accountDB = srvAccount.getAccountByAccountNumber(account.getAccountNumber());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			} while(!(accountDB == null));
+			
+			account.setBalance(Integer.parseInt(wordsOfTheFile.get(4*i+3)));
+
+			SrvAccount srvAccount = SrvAccount.getINSTANCE();
+			srvAccount.setDbManager(SQLiteManager.getInstance());
+			try {
+				srvAccount.save(account);			
+			
+			} catch (Exception e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 	
 			}
 			
 		}
+		
+		System.out.println((wordsOfTheFile.size()/4-1) + " customers and accounts created and saved");
 		
 		deleteInputFile("accounts_customers");
 		
@@ -56,11 +80,14 @@ public class AccountCustomerThread extends ReaderThread  {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			
+		}
 		}
 		
+			
 		
-	}
+		
+		
+	
 	
 	public static void main (String[] args) {
 		AccountCustomerThread act = new AccountCustomerThread();

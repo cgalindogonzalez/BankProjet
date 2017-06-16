@@ -25,6 +25,7 @@ public class Main {
 		st.execute(srvCustomer.createTableInDB());
 
 		SrvAccount srvAccount = SrvAccount.getINSTANCE();
+		//st.execute("PRAGMA foreign_keys=ON;");
 		st.execute(srvAccount.createTableInDB());
 
 		SrvOperation srvOperation = SrvOperation.getINSTANCE();

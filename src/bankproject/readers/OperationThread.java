@@ -1,57 +1,92 @@
 package bankproject.readers;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import bankproject.entities.Account;
+import bankproject.entities.Customer;
 import bankproject.entities.Operation;
+import bankproject.exceptions.SrvException;
 import bankproject.services.SQLiteManager;
 import bankproject.services.SrvAccount;
+import bankproject.services.SrvCustomer;
 import bankproject.services.SrvOperation;
 
 public class OperationThread extends ReaderThread {
 
 	public void run () {
 		
-		List<String> wordsOfTheFile = readInputFile("operation"); //Y SI EL FICHERO NO EXISTE?? (ALGO APARTE DEL TRY/CATCH?)
+		List<String> wordsOfTheFile = readInputFile("operation"); //Intentar arreglar lo de nombre espacio apellido
 		
-		for (int i=1; i< wordsOfTheFile.size()/3; i++) {
-			Operation operation = new Operation();
-			operation.setAmount(Integer.parseInt(wordsOfTheFile.get(3*i)));
-			operation.setDate(new GregorianCalendar());
+		for (int i=1; i< wordsOfTheFile.size()/4; i++) {
 			
-			SrvOperation srvOperation = SrvOperation.getINSTANCE();
-			srvOperation.setDbManager(SQLiteManager.getInstance());
+			Customer customer = new Customer();
+			customer.setName(wordsOfTheFile.get(4*i+2));
+			customer.setSurname(wordsOfTheFile.get(4*i+3));
+			String name = customer.getName();
+			String surname = customer.getSurname();
+			
+			System.out.println(name + " " + surname);
+			
+			SrvCustomer srvCustomer = SrvCustomer.getINSTANCE();
+			srvCustomer.setDbManager(SQLiteManager.getInstance());	
 			try {
-				srvOperation.create(operation); //save EN VEZ DE create?
-			} catch (SQLException e1) {
+				customer = srvCustomer.getCustomerByNameSurname(name, surname);
+			} catch (SQLException e2) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e2.printStackTrace();
 			}
 			
-			String accountNumber = wordsOfTheFile.get(3*i+1);
-			Account account = new Account (accountNumber);
+			System.out.println(customer.getIdCustomer());
+			
+			Operation operation = new Operation();
+			operation.setAmount(Integer.parseInt(wordsOfTheFile.get(4*i)));
+			operation.setDate(new GregorianCalendar());
+			System.out.println(operation.getAmount());
+			
+			String accountNumber = wordsOfTheFile.get(4*i+1);
+			System.out.println(accountNumber);
+			Account account = new Account();
+			
+			SrvAccount srvAccount = SrvAccount.getINSTANCE();
+			srvAccount.setDbManager(SQLiteManager.getInstance());
+			
+			try {
+				account = srvAccount.getAccountByAccountNumber(accountNumber);//PROBLEMA A RESOLVER AQUÍ (PERO VIENE DEL get entity by Id)
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
 			if(operation.getAmount() < 0)
 				account.removeMoneyToBalance(Math.abs(operation.getAmount())); 
 			else if(operation.getAmount() > 0)
 				account.addMoneyToBalance(Math.abs(operation.getAmount()));
 			
-			SrvAccount srvAccount = SrvAccount.getINSTANCE();
-			srvAccount.setDbManager(SQLiteManager.getInstance());
 			try {
-				srvAccount.update(account);//save EN VEZ DE update? O NO VALE NINGUNA DE LAS DOS?
-			} catch (SQLException e1) {
+				srvAccount.save(account);
+			} catch (Exception e2) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e2.printStackTrace();
 			}
 			
+			operation.setAccount(account);
 			
 			
+			SrvOperation srvOperation = SrvOperation.getINSTANCE();
+			srvOperation.setDbManager(SQLiteManager.getInstance());
+			try {
+				srvOperation.save(operation);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	
 		}
 		
-		deleteInputFile("operation");
+		//deleteInputFile("operation");
 		
 		try {
 			Thread.sleep(660000);

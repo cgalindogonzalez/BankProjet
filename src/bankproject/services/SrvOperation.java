@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import bankproject.entities.AbstractEntity;
+import bankproject.entities.Account;
 import bankproject.entities.Operation;
 import bankproject.exceptions.SrvException;
 
@@ -39,15 +40,16 @@ public class SrvOperation extends AbstractService {
 	 * @throws SQLException
 	 */
 	public void create(Operation entity) throws SQLException {
-		String str = "INSERT INTO " + getEntitySqlTable() + " (date, amount) VALUES (?, ?)";
+		String str = "INSERT INTO " + getEntitySqlTable() + " (date, amount, idaccount) VALUES (?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
 		try {
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(str);
-			ps.setString(1, entity.getDate().getGregorianChange().toString());//FUNCIONA, PERO NO ESTOY SEGURA DE QUE SEA CORRECTO, XQ ES STRING Y EN LA TABLA ES DATE	
+			ps.setString(1, entity.getDate().getGregorianChange().toString());
 			ps.setInt(2, entity.getAmount());
+			ps.setInt(3, entity.getAccount().getIdAccount());
 	
 			ps.execute();
 		} catch (SQLException e) {
@@ -70,7 +72,7 @@ public class SrvOperation extends AbstractService {
 	 * @throws SQLException
 	 */
 	private void update(Operation entity) throws SQLException {
-		String sql = "UPDATE " + getEntitySqlTable() + " SET date = ?, amount = ? WHERE idoperation = ?";
+		String sql = "UPDATE " + getEntitySqlTable() + " SET date = ?, amount = ?, account = ? WHERE idoperation = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
@@ -79,7 +81,8 @@ public class SrvOperation extends AbstractService {
 			ps = connection.prepareStatement(sql);
 			ps.setDate(1, (Date) entity.getDate().getGregorianChange());
 			ps.setInt(2, entity.getAmount());
-			ps.setInt(3, entity.getIdOperation());
+			ps.setInt(3, entity.getAccount().getIdAccount());
+			ps.setInt(4, entity.getIdOperation());
 			ps.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -96,7 +99,7 @@ public class SrvOperation extends AbstractService {
 	}
 	
 	private void delete(Operation entity) throws SQLException {
-		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE idoperation = ? AND date = ? AND amount = ?";
+		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE idoperation = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
@@ -104,8 +107,6 @@ public class SrvOperation extends AbstractService {
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, entity.getIdOperation());
-			ps.setDate(2, (Date) entity.getDate().getGregorianChange());
-			ps.setInt(2, entity.getAmount());
 			ps.execute();
 			
 		} catch (SQLException e) {
@@ -146,6 +147,11 @@ public class SrvOperation extends AbstractService {
 		operation.setDate(gc);
 		
 		operation.setAmount(rs.getInt("amount"));
+		
+		Integer idaccount = rs.getInt("idaccount");
+		SrvAccount srvAccount = SrvAccount.getINSTANCE();
+		Account account = (Account)srvAccount.get(idaccount);
+		operation.setAccount(account);
 
 		return operation;
 	}
@@ -156,7 +162,8 @@ public class SrvOperation extends AbstractService {
 			.append("idoperation INTEGER PRIMARY KEY AUTOINCREMENT, ")
 			.append("date DATE, ")
 			.append("amount INT, ")
-			.append("FOREIGN KEY (idoperation) REFERENCES account (idaccount) ON DELETE CASCADE")
+			.append("idaccount,")
+			.append("FOREIGN KEY (idaccount) REFERENCES account (idaccount) ON DELETE CASCADE")
 			.append(")");
 		
 		return sb.toString();

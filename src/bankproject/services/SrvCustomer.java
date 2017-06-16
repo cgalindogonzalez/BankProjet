@@ -50,8 +50,7 @@ public class SrvCustomer extends AbstractService{
 			ps.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("Error del método create");
+			e.printStackTrace();
 		} finally {
 			if (ps != null) {
 			ps.close();
@@ -95,7 +94,7 @@ public class SrvCustomer extends AbstractService{
 	}
 	
 	private void delete(Customer entity) throws SQLException {
-		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE idcustomer = ? AND name = ? AND surname = ?";
+		String sql ="DELETE FROM" + getEntitySqlTable() + "WHERE idcustomer = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
@@ -103,8 +102,6 @@ public class SrvCustomer extends AbstractService{
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, entity.getIdCustomer());
-			ps.setString(2, entity.getName());
-			ps.setString(2, entity.getSurname());
 			ps.execute();
 			
 		} catch (SQLException e) {
@@ -144,11 +141,45 @@ public class SrvCustomer extends AbstractService{
 		return customer;
 	}
 	
+	public Customer getCustomerByNameSurname(String name, String surname) throws SQLException {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Customer customer = null;
+		
+		StringBuilder query = new StringBuilder("SELECT * FROM ");
+		query.append(getEntitySqlTable());
+		query.append(" WHERE name = ? AND surname = ?");
+		try{
+			connection = getDbManager().getConnection();
+			ps = connection.prepareStatement(query.toString());
+			ps.setString(1, name);
+			ps.setString(2, surname);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				customer = populateEntity(rs);
+			}
+		} catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+			if (ps != null) {
+			ps.close();
+			}
+			
+			if (connection != null) {
+			connection.close();
+			}
+		}
+		
+		return customer;
+	}
+	
 	public String createTableInDB () {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE IF NOT EXISTS customer ( ")
 			.append("idcustomer INTEGER PRIMARY KEY AUTOINCREMENT, ")
-			.append("name TEXT, ")
+			.append("name TEXT, ")//añadir not null
 			.append("surname TEXT ")
 			.append(")");
 		

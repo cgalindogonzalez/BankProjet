@@ -5,7 +5,9 @@ public class SrvException extends Exception {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8495942825151807393L;
+
+
 
 	public SrvException() {
 		// TODO Auto-generated constructor stub
