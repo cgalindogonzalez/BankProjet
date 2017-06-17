@@ -1,11 +1,11 @@
 package bankproject.entities;
 
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 public class Operation extends AbstractEntity {
 	
 	private Integer idOperation;
-	private GregorianCalendar date;
+	private Date date;
 	private TypeEnum type;
 	private int amount;
 	private Account account;
@@ -31,7 +31,7 @@ public class Operation extends AbstractEntity {
 	 * getter
 	 * @return date
 	 */
-	public GregorianCalendar getDate() {
+	public Date getDate() {
 		return date;
 	}
 
@@ -39,7 +39,7 @@ public class Operation extends AbstractEntity {
 	 * setter
 	 * @param date
 	 */
-	public void setDate(GregorianCalendar date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

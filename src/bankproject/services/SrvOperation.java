@@ -1,11 +1,15 @@
 package bankproject.services;
 
-import java.util.GregorianCalendar;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashSet;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import bankproject.entities.AbstractEntity;
 import bankproject.entities.Account;
@@ -40,16 +44,15 @@ public class SrvOperation extends AbstractService {
 	 * @throws SQLException
 	 */
 	public void create(Operation entity) throws SQLException {
-		String str = "INSERT INTO " + getEntitySqlTable() + " (date, amount, idaccount) VALUES (?, ?, ?)";
+		String str = "INSERT INTO " + getEntitySqlTable() + " (date, amount, idaccount) VALUES (dateTime('NOW'), ?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
 		try {
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(str);
-			ps.setString(1, entity.getDate().getGregorianChange().toString());
-			ps.setInt(2, entity.getAmount());
-			ps.setInt(3, entity.getAccount().getIdAccount());
+			ps.setInt(1, entity.getAmount());
+			ps.setInt(2, entity.getAccount().getIdAccount());
 	
 			ps.execute();
 		} catch (SQLException e) {
@@ -72,17 +75,16 @@ public class SrvOperation extends AbstractService {
 	 * @throws SQLException
 	 */
 	private void update(Operation entity) throws SQLException {
-		String sql = "UPDATE " + getEntitySqlTable() + " SET date = ?, amount = ?, account = ? WHERE idoperation = ?";
+		String sql = "UPDATE " + getEntitySqlTable() + " SET amount = ?, account = ? WHERE idoperation = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
 		try {
 			connection = getDbManager().getConnection();
 			ps = connection.prepareStatement(sql);
-			ps.setDate(1, (Date) entity.getDate().getGregorianChange());
-			ps.setInt(2, entity.getAmount());
-			ps.setInt(3, entity.getAccount().getIdAccount());
-			ps.setInt(4, entity.getIdOperation());
+			ps.setInt(1, entity.getAmount());
+			ps.setInt(2, entity.getAccount().getIdAccount());
+			ps.setInt(3, entity.getIdOperation());
 			ps.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -142,25 +144,76 @@ public class SrvOperation extends AbstractService {
 		Operation operation = new Operation();
 		operation.setIdOperation(rs.getInt("idoperation"));
 		
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTime(rs.getDate("date"));
-		operation.setDate(gc);
+//		java.sql.Timestamp sqlDate = rs.getTimestamp("date");
+		
+		String sqlDate = rs.getString("date");
+		System.out.println(sqlDate);
+		
+		Timestamp ts = Timestamp.valueOf(sqlDate);
+		System.out.println(ts);
+		long tst = ts.getTime();
+		System.out.println(tst);
+		
+		//2017-06-17 08:49:46
+		
+		Date date = new Date(tst);
+		System.out.println(date);
+		operation.setDate(date);
+	
 		
 		operation.setAmount(rs.getInt("amount"));
 		
 		Integer idaccount = rs.getInt("idaccount");
 		SrvAccount srvAccount = SrvAccount.getINSTANCE();
-		Account account = (Account)srvAccount.get(idaccount);
+		Account account = (Account)srvAccount.get("idaccount", idaccount);
 		operation.setAccount(account);
 
 		return operation;
 	}
 	
+	public Collection<Operation> getOperationsByIdAccount(Integer idaccount) throws Exception {
+		Connection connexion = null;
+		Statement st = null;
+		ResultSet rs = null;
+		Collection<Operation> allAccountOperations = new LinkedHashSet<Operation>();
+		
+		StringBuilder query = new StringBuilder("SELECT * FROM operation WHERE idaccount = ");
+		query.append(idaccount);
+		System.out.println(query.toString());
+		
+		try {
+			connexion = getDbManager().getConnection();
+			st = connexion.createStatement();
+			rs = st.executeQuery(query.toString());
+			
+			while (rs.next()) {
+				allAccountOperations.add((Operation) populateEntity(rs));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (st != null) {
+				st.close();
+			}
+			if (connexion != null) {
+				connexion.close();
+			}
+			
+			
+		}
+		
+		return allAccountOperations;
+		
+	}
+	
+	
+	
 	public String createTableInDB () {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE IF NOT EXISTS operation ( ")
 			.append("idoperation INTEGER PRIMARY KEY AUTOINCREMENT, ")
-			.append("date DATE, ")
+			.append("date TIMESTAMP, ")
 			.append("amount INT, ")
 			.append("idaccount,")
 			.append("FOREIGN KEY (idaccount) REFERENCES account (idaccount) ON DELETE CASCADE")

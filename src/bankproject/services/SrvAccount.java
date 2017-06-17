@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 import bankproject.entities.AbstractEntity;
 import bankproject.entities.Account;
 import bankproject.entities.CountryEnum;
 import bankproject.entities.Customer;
+import bankproject.entities.Operation;
 import bankproject.exceptions.SrvException;
 
 public class SrvAccount extends AbstractService {
@@ -66,7 +70,7 @@ public class SrvAccount extends AbstractService {
 	}
 	
 	public void update (Account entity) throws SQLException {
-		String str = "UPDATE" + getEntitySqlTable() + "SET balance = ? WHERE idaccount = ?";
+		String str = "UPDATE " + getEntitySqlTable() + " SET balance = ? WHERE idaccount = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
@@ -141,7 +145,7 @@ public class SrvAccount extends AbstractService {
 		Integer idcustomer = rs.getInt("idcustomer");
 		
 		SrvCustomer srvCustomer = SrvCustomer.getINSTANCE();
-		Customer customer = (Customer) srvCustomer.get(idcustomer);
+		Customer customer = (Customer) srvCustomer.get("idcustomer", idcustomer);
      
 		
 		
@@ -184,6 +188,42 @@ public class SrvAccount extends AbstractService {
 		}
 		
 		return account;
+	}
+	
+	public Collection<Account> getAccountsByIdCustomer(Integer idcustomer) throws Exception {
+		Connection connexion = null;
+		Statement st = null;
+		ResultSet rs = null;
+		Collection<Account> allCustomerAccounts = new LinkedHashSet<Account>();
+		
+		StringBuilder query = new StringBuilder("SELECT * FROM account WHERE idcustomer = ");
+		query.append(idcustomer);
+		System.out.println(query.toString());
+		
+		try {
+			connexion = getDbManager().getConnection();
+			st = connexion.createStatement();
+			rs = st.executeQuery(query.toString());
+			
+			while (rs.next()) {
+				allCustomerAccounts.add((Account) populateEntity(rs));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (st != null) {
+				st.close();
+			}
+			if (connexion != null) {
+				connexion.close();
+			}
+			
+			
+		}
+		
+		return allCustomerAccounts;
+		
 	}
 	
 	public String createTableInDB () {

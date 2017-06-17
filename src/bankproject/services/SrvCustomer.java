@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import bankproject.entities.AbstractEntity;
+import bankproject.entities.Account;
 import bankproject.entities.Customer;
 import bankproject.exceptions.SrvException;
 
@@ -174,6 +175,8 @@ public class SrvCustomer extends AbstractService{
 		
 		return customer;
 	}
+	
+
 	
 	public String createTableInDB () {
 		StringBuilder sb = new StringBuilder();

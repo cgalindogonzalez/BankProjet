@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import bankproject.entities.AbstractEntity;
 import bankproject.exceptions.SrvException;
@@ -38,7 +39,7 @@ public abstract class AbstractService {
 	 * @return
 	 */
 	public DatabaseManager getDbManager() {
-		return dbManager;
+		return this.dbManager;
 	}
 
 	/**
@@ -65,7 +66,7 @@ public abstract class AbstractService {
 	 * @return
 	 * @throws Exception
 	 */
-	public AbstractEntity get(Integer id) throws Exception {
+	public AbstractEntity get(String col, Integer id) throws Exception {
 		Connection connexion = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -73,10 +74,14 @@ public abstract class AbstractService {
 		
 		StringBuilder query = new StringBuilder("SELECT * FROM ");
 		query.append(getEntitySqlTable());
-		query.append(" WHERE id = ?");
-		
+		query.append(" WHERE ");
+		query.append(col);
+		query.append(" = ?");
+		System.out.println(query.toString());
 		try {
-			connexion = getDbManager().getConnection();
+			DatabaseManager dbm = this.getDbManager();
+			connexion = dbm.getConnection();
+			
 			pst = connexion.prepareStatement(query.toString());
 			pst.setInt(1, id);
 			rs = pst.executeQuery();
@@ -114,15 +119,17 @@ public abstract class AbstractService {
 	 * @param ids
 	 * @return
 	 */
-	public Collection<AbstractEntity> get(Collection<Integer> ids)  throws Exception {
+	public Collection<AbstractEntity> get(Collection<Integer> ids, String idEntity)  throws Exception {
 		Connection connexion = null;
 		Statement st = null;
 		ResultSet rs = null;
-		Collection<AbstractEntity> results = new HashSet<AbstractEntity>();
+		Collection<AbstractEntity> results = new LinkedHashSet<AbstractEntity>();
 		
 		StringBuilder query = new StringBuilder("SELECT * FROM ");
 		query.append(getEntitySqlTable());
-		query.append(" WHERE id IN (");
+		query.append(" WHERE ");
+		query.append(idEntity);
+		query.append(" IN (");
 		
 		Iterator<Integer> it = ids.iterator();
 		do {
@@ -133,6 +140,9 @@ public abstract class AbstractService {
 		} while(it.hasNext());
 		
 		query.append(")");
+		query.append(" ORDER BY ");
+		query.append(idEntity);
+		System.out.println(query.toString());
 		
 		try {
 			connexion = getDbManager().getConnection();
@@ -146,13 +156,50 @@ public abstract class AbstractService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
+			if (st != null) {
+				st.close();
+			}
 			if (connexion != null) {
 				connexion.close();
 			}
 			
+			
+		}
+		
+		return results;
+	}
+	
+	public Collection<AbstractEntity> getAll()  throws Exception {
+		Connection connexion = null;
+		Statement st = null;
+		ResultSet rs = null;
+		Collection<AbstractEntity> results = new LinkedHashSet<AbstractEntity>();
+		
+		StringBuilder query = new StringBuilder("SELECT * FROM ");
+		query.append(getEntitySqlTable());
+		
+		
+		
+		try {
+			connexion = getDbManager().getConnection();
+			st = connexion.createStatement();
+			rs = st.executeQuery(query.toString());
+			
+			while (rs.next()) {
+				results.add(populateEntity(rs));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
 			if (st != null) {
 				st.close();
 			}
+			if (connexion != null) {
+				connexion.close();
+			}
+			
+			
 		}
 		
 		return results;

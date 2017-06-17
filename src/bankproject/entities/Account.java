@@ -168,13 +168,7 @@ public class Account extends AbstractEntity {
 		
 	}
 
-	public static void main(String[] args) {
-		
-//		Account account = new Account(CountryEnum.SPAIN);
-//		// accountNumber = account.getAccountNumber();
-//		System.out.println(account.getAccountNumber());
-		
-	}
+	
 
 	public Customer getCustomer() {
 		return customer;
