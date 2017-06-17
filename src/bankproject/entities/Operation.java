@@ -3,13 +3,13 @@ package bankproject.entities;
 import java.util.Date;
 
 public class Operation extends AbstractEntity {
-	
+
 	private Integer idOperation;
 	private Date date;
 	private TypeEnum type;
 	private int amount;
 	private Account account;
-	
+
 
 	/**
 	 * getter
@@ -26,7 +26,7 @@ public class Operation extends AbstractEntity {
 	public void setIdOperation(Integer idOperation) {
 		this.idOperation = idOperation;
 	}
-	
+
 	/**
 	 * getter
 	 * @return date
@@ -75,10 +75,18 @@ public class Operation extends AbstractEntity {
 		this.amount = amount;
 	}
 
+	/**
+	 * getter
+	 * @return account
+	 */
 	public Account getAccount() {
 		return account;
 	}
 
+	/**
+	 * setter
+	 * @param account
+	 */
 	public void setAccount(Account account) {
 		this.account = account;
 	}

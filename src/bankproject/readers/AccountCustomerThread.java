@@ -1,5 +1,6 @@
 package bankproject.readers;
 
+import java.sql.SQLException;
 import java.util.List;
 import bankproject.entities.Account;
 import bankproject.entities.CountryEnum;
@@ -15,25 +16,39 @@ public class AccountCustomerThread extends ReaderThread  {
 
 
 		for (int i=1; i< wordsOfTheFile.size()/4; i++) {
+			//Customer with name and surname read from the file 
 			Customer customer = new Customer();
 			customer.setName(wordsOfTheFile.get(4*i+2)) ;
 			customer.setSurname(wordsOfTheFile.get(4*i+1));
 
+			//Check if customer exists in the DB and save it if not
 			SrvCustomer srvCustomer = SrvCustomer.getINSTANCE();
 
+			Customer customerDB = null;
 			try {
-				srvCustomer.save(customer);
-				customer = srvCustomer.getCustomerByNameSurname(customer.getName(), customer.getSurname());
-
-			} catch (Exception e) {
+				customerDB = srvCustomer.getCustomerByNameSurname(customer.getName(), customer.getSurname());
+			} catch (SQLException e2) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e2.printStackTrace();
+			}
+			if (customerDB == null) {
+				try {
+					srvCustomer.save(customer);
+					customer = srvCustomer.getCustomerByNameSurname(customer.getName(), customer.getSurname());
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				customer = customerDB;
 			}
 
-
+			//Create new account number for the customer and check if this account number already exists (and then generate another one if so)
 			CountryEnum country = CountryEnum.valueOf(wordsOfTheFile.get(4*i).toUpperCase());
 			Account account = null;
 			Account accountDB = null;
+
 			do {
 				account = new Account(country, customer); 
 				SrvAccount srvAccount = SrvAccount.getINSTANCE();
@@ -45,10 +60,11 @@ public class AccountCustomerThread extends ReaderThread  {
 					e.printStackTrace();
 				}
 
-			} while(!(accountDB == null));
+			} while(!(accountDB == null)); 
 
 			account.setBalance(Integer.parseInt(wordsOfTheFile.get(4*i+3)));
 
+			//Save the new account in the DB
 			SrvAccount srvAccount = SrvAccount.getINSTANCE();
 
 			try {

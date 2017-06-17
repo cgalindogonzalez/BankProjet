@@ -25,20 +25,20 @@ import bankproject.writers.BankStatementThread;
 public class Main {
 
 	/**
-	 * 
+	 * Print in console the statements of a customer from his name and surname
 	 */
 	@SuppressWarnings("resource")
 	public static void CLI() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter customer Name and Surname");
-		
+
 		while (true) {
 			String str = sc.nextLine();
 			String[] nameSurname = str.split(" ");
 			String name = nameSurname[0];
 			String surname = nameSurname[1];
 
-			String header = "Date\t\tAccount\t\tCustomer\t\tType\t\tAmount\r\n";//HABRÍA Q QUITAR EL TYPE
+			String header = "Date\t\tAccount\t\tCustomer\t\tAmount\r\n";
 			System.out.println(header);
 
 			Customer customer = new Customer();
@@ -83,7 +83,7 @@ public class Main {
 					e.printStackTrace();
 				}
 				Iterator<Operation> it1 = allThisAccountOperations.iterator();
-				if (!it1.hasNext()){
+				if (it1.hasNext()){
 					while (it1.hasNext()) {
 						Operation operation = (Operation) it1.next();
 						Date date = operation.getDate();
@@ -117,7 +117,6 @@ public class Main {
 
 		SrvAccount srvAccount = SrvAccount.getINSTANCE();
 		srvAccount.setDbManager(SQLiteManager.getInstance());
-		//st.execute("PRAGMA foreign_keys=ON;");
 		st.execute(srvAccount.createTableInDB());
 
 		SrvOperation srvOperation = SrvOperation.getINSTANCE();

@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -33,7 +32,7 @@ public abstract class AbstractService {
 	public void setEntitySqlTable(String entitySqlTable) {
 		this.entitySqlTable = entitySqlTable;
 	}
-	
+
 	/**
 	 * getter
 	 * @return
@@ -49,8 +48,8 @@ public abstract class AbstractService {
 	public void setDbManager(DatabaseManager dbManager) {
 		this.dbManager = dbManager;
 	}
-	
-	
+
+
 	/**
 	 * Create or update entity
 	 * 
@@ -59,7 +58,7 @@ public abstract class AbstractService {
 	 * @throws SQLException 
 	 */
 	public abstract void save(AbstractEntity entity) throws SrvException, SQLException;
-	
+
 	/**
 	 * Get Entity by Id
 	 * @param id
@@ -71,21 +70,21 @@ public abstract class AbstractService {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		AbstractEntity result = null;
-		
+
 		StringBuilder query = new StringBuilder("SELECT * FROM ");
 		query.append(getEntitySqlTable());
 		query.append(" WHERE ");
 		query.append(col);
 		query.append(" = ?");
-		System.out.println(query.toString());
+
 		try {
 			DatabaseManager dbm = this.getDbManager();
 			connexion = dbm.getConnection();
-			
+
 			pst = connexion.prepareStatement(query.toString());
 			pst.setInt(1, id);
 			rs = pst.executeQuery();
-			
+
 			while (rs.next()) {
 				result = populateEntity(rs);
 			}
@@ -100,10 +99,10 @@ public abstract class AbstractService {
 				connexion.close();
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param rs
@@ -112,7 +111,7 @@ public abstract class AbstractService {
 	 * @throws Exception 
 	 */
 	protected abstract AbstractEntity populateEntity(ResultSet rs) throws SQLException, Exception;
-	
+
 	/**
 	 * Get collection of entities by ids
 	 * 
@@ -124,13 +123,13 @@ public abstract class AbstractService {
 		Statement st = null;
 		ResultSet rs = null;
 		Collection<AbstractEntity> results = new LinkedHashSet<AbstractEntity>();
-		
+
 		StringBuilder query = new StringBuilder("SELECT * FROM ");
 		query.append(getEntitySqlTable());
 		query.append(" WHERE ");
 		query.append(idEntity);
 		query.append(" IN (");
-		
+
 		Iterator<Integer> it = ids.iterator();
 		do {
 			query.append(it.next());
@@ -138,17 +137,17 @@ public abstract class AbstractService {
 				query.append(",");
 			}
 		} while(it.hasNext());
-		
+
 		query.append(")");
 		query.append(" ORDER BY ");
 		query.append(idEntity);
 		System.out.println(query.toString());
-		
+
 		try {
 			connexion = getDbManager().getConnection();
 			st = connexion.createStatement();
 			rs = st.executeQuery(query.toString());
-			
+
 			while (rs.next()) {
 				results.add(populateEntity(rs));
 			}
@@ -162,29 +161,32 @@ public abstract class AbstractService {
 			if (connexion != null) {
 				connexion.close();
 			}
-			
-			
+
+
 		}
-		
+
 		return results;
 	}
-	
+
+	/**
+	 * get collection of all entities
+	 * @return
+	 * @throws Exception
+	 */
 	public Collection<AbstractEntity> getAll()  throws Exception {
 		Connection connexion = null;
 		Statement st = null;
 		ResultSet rs = null;
 		Collection<AbstractEntity> results = new LinkedHashSet<AbstractEntity>();
-		
+
 		StringBuilder query = new StringBuilder("SELECT * FROM ");
 		query.append(getEntitySqlTable());
-		
-		
-		
+
 		try {
 			connexion = getDbManager().getConnection();
 			st = connexion.createStatement();
 			rs = st.executeQuery(query.toString());
-			
+
 			while (rs.next()) {
 				results.add(populateEntity(rs));
 			}
@@ -198,19 +200,11 @@ public abstract class AbstractService {
 			if (connexion != null) {
 				connexion.close();
 			}
-			
-			
+
 		}
-		
+
 		return results;
 	}
-	
-	public static void main(String[] args) {
-		StringBuilder query = new StringBuilder("SELECT * FROM ");
-		query.append("customer");
-		query.append(" WHERE id = ?");
-		System.out.println(query.toString());
-		
-	}
+
 }
 

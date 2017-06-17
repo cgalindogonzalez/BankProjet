@@ -1,38 +1,28 @@
 package bankproject.entities;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class Account extends AbstractEntity {
-	
+
 	private Integer idAccount = null; 
 	private Customer customer = null;
 	private String accountNumber = null; 
 	private int balance = 0;
-	private List<Operation> operationsList = new ArrayList<Operation>(); 
-	private static Set<Account> allAccounts = new HashSet<Account>(); 
 	private Random randGen = null;
-	
+
 	/**
-	 * Common initializations for constructors 
+	 * Common initialization for constructors 
 	 */
-	private void preInit() {
+	private void init() {
 		this.randGen = new Random();	
 	}
-	
-	private void postInit() {
-		Account.allAccounts.add(this);
-	}
-	
+
+
 	/**
 	 * Default constructor
 	 */
 	public Account () {
-		this.preInit();
-		//this.postInit();
+		this.init();
 	}
 
 	/**
@@ -40,23 +30,20 @@ public class Account extends AbstractEntity {
 	 */
 
 	public Account(CountryEnum country, Customer customer){
-		this.preInit();
+		this.init();
 		this.accountNumber = country.getAbbreviation() + this.createRandomCode();
 		this.customer = customer;
-		this.postInit();
 	}
-	
+
 	/**
 	 * Constructor to create an account with the accountNumber done by a string (createAccountNumberFromString) ---> to be used in the operation Thread
 	 */
-	
-	public Account(String str) {
-		this.preInit();
-		this.accountNumber = str;
-		this.postInit();
 
+	public Account(String str) {
+		this.init();
+		this.accountNumber = str;
 	}
-	
+
 	/**
 	 * getter
 	 * @return idAccount
@@ -72,7 +59,7 @@ public class Account extends AbstractEntity {
 	public void setIdAccount(int idAccount) {
 		this.idAccount = idAccount;
 	}
-	
+
 	/**
 	 * getter
 	 * @return accountNumber
@@ -104,40 +91,31 @@ public class Account extends AbstractEntity {
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
-	
+
 	/**
 	 * getter
-	 * @return operationsList
+	 * @return customer
 	 */
-	public List<Operation> getOperationsList() {
-		return operationsList;
+	public Customer getCustomer() {
+		return customer;
 	}
-	
+
 	/**
 	 * setter
-	 * @param operationsList
+	 * @param customer
 	 */
-	public void setOperationsList(List<Operation> operationsList) {
-		this.operationsList.addAll(operationsList);
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
-	
-	/**
-	 * 
-	 * @param operation
-	 */
-	public void addOperationToOperationsList (Operation operation) {
-		this.operationsList.add(operation);
-	}
-	
+
 	/**
 	 * Creates random six digits numeric code
 	 * @return
 	 */
 	private String createRandomCode() {
 		return  String.format("%06d", this.randGen.nextInt(1000000));
-
 	}
-	
+
 	/**
 	 * 
 	 * @param money
@@ -145,7 +123,7 @@ public class Account extends AbstractEntity {
 	public void addMoneyToBalance (int money){
 		this.balance += money;
 	}
-	
+
 	/**
 	 * 
 	 * @param money
@@ -153,31 +131,7 @@ public class Account extends AbstractEntity {
 	public void removeMoneyToBalance(int money){
 		this.balance -= money;
 	}
-	
-	public boolean equals(Object other) {
-		if (other == null) return false;
-	    if (other == this) return true;
-	    if (!(other instanceof Account))return false;
-	    Account otherAccount = (Account)other;
-	    
-	    return this.accountNumber == otherAccount.getAccountNumber();
-	}
-	
-	public int hashCode() {
-		return this.accountNumber.hashCode();
-		
-	}
-
-	
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
 
 
-	
+
 }
